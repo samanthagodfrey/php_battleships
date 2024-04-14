@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <title>Battleships</title>
+    <script>
+      let count = 0;
+      let shipOneX = null;
+      let shipOneY = null;
+      let shipTwoX = null;
+      let shipTwoY = null;
+      let shipOneHit = false;
+      let shipTwoHit = false;
+
+      async function makeMove() {
+        var xValue = document.getElementById("xValue").value;
+        var yValue = document.getElementById("yValue").value;
+        const url = `makeMove.php?xValue=${xValue}&yValue=${yValue}&count=${count}&shipOneX=${shipOneX}&shipOneY=${shipOneY}&shipTwoX=${shipTwoX}&shipTwoY=${shipTwoY}&shipOneHit=${shipOneHit}&shipTwoHit=${shipTwoHit}`;
+        const response = await fetch(url, {
+          method: "GET",
+        });
+
+        if (!response.ok) {
+          throw new Error("Error while processing move");
+        }
+
+        const responseBody = await response.json();
+
+        const {
+          subtitle,
+          boxId,
+          boxColour,
+          shipOneXResponse,
+          shipOneYResponse,
+          shipTwoXResponse,
+          shipTwoYResponse,
+          shipOneHitResponse,
+          shipTwoHitResponse,
+          doNotIncreaseCounter,
+        } = responseBody;
+
+        if (!doNotIncreaseCounter) {
+          count = count + 1;
+        }
+
+        shipOneX = shipOneXResponse;
+        shipOneY = shipOneYResponse;
+        shipTwoX = shipTwoXResponse;
+        shipTwoY = shipTwoYResponse;
+        shipOneHit = shipOneHitResponse;
+        shipTwoHit = shipTwoHitResponse;
+
+        const subtitleElement = document.getElementById("subtitle");
+        subtitleElement ? (subtitleElement.innerHTML = subtitle) : null;
+
+        const boxElement = document.getElementById(boxId);
+        boxElement ? boxElement.setAttribute("class", boxColour) : null;
+      }
+    </script>
+  </head>
+
+  <body>
+    <div class="board">
+      <p class="message">Battleships</p>
+      <table class="table">
+        <tbody>
+          <tr>
+            <th class="number"></th>
+            <th class="number">1</th>
+            <th class="number">2</th>
+            <th class="number">3</th>
+            <th class="number">4</th>
+            <th class="number">5</th>
+            <th class="number">6</th>
+            <th class="number">7</th>
+            <th class="number">8</th>
+          </tr>
+
+          <tr>
+            <th class="number">1</th>
+            <td class="box" id="11"></td>
+            <td class="box" id="12"></td>
+            <td class="box" id="13"></td>
+            <td class="box" id="14"></td>
+            <td class="box" id="15"></td>
+            <td class="box" id="16"></td>
+            <td class="box" id="17"></td>
+            <td class="box" id="18"></td>
+          </tr>
+
+          <tr>
+            <th class="number">2</th>
+            <td class="box" id="21"></td>
+            <td class="box" id="22"></td>
+            <td class="box" id="23"></td>
+            <td class="box" id="24"></td>
+            <td class="box" id="25"></td>
+            <td class="box" id="26"></td>
+            <td class="box" id="27"></td>
+            <td class="box" id="28"></td>
+          </tr>
+
+          <tr>
+            <th class="number">3</th>
+            <td class="box" id="31"></td>
+            <td class="box" id="32"></td>
+            <td class="box" id="33"></td>
+            <td class="box" id="34"></td>
+            <td class="box" id="35"></td>
+            <td class="box" id="36"></td>
+            <td class="box" id="37"></td>
+            <td class="box" id="38"></td>
+          </tr>
+
+          <tr>
+            <th class="number">4</th>
+            <td class="box" id="41"></td>
+            <td class="box" id="42"></td>
+            <td class="box" id="43"></td>
+            <td class="box" id="44"></td>
+            <td class="box" id="45"></td>
+            <td class="box" id="46"></td>
+            <td class="box" id="47"></td>
+            <td class="box" id="48"></td>
+          </tr>
+
+          <tr>
+            <th class="number">5</th>
+            <td class="box" id="51"></td>
+            <td class="box" id="52"></td>
+            <td class="box" id="53"></td>
+            <td class="box" id="54"></td>
+            <td class="box" id="55"></td>
+            <td class="box" id="56"></td>
+            <td class="box" id="57"></td>
+            <td class="box" id="58"></td>
+          </tr>
+
+          <tr>
+            <th class="number">6</th>
+            <td class="box" id="61"></td>
+            <td class="box" id="62"></td>
+            <td class="box" id="63"></td>
+            <td class="box" id="64"></td>
+            <td class="box" id="65"></td>
+            <td class="box" id="66"></td>
+            <td class="box" id="67"></td>
+            <td class="box" id="68"></td>
+          </tr>
+
+          <tr>
+            <th class="number">7</th>
+            <td class="box" id="71"></td>
+            <td class="box" id="72"></td>
+            <td class="box" id="73"></td>
+            <td class="box" id="74"></td>
+            <td class="box" id="75"></td>
+            <td class="box" id="76"></td>
+            <td class="box" id="77"></td>
+            <td class="box" id="78"></td>
+          </tr>
+
+          <tr>
+            <th class="number">8</th>
+            <td class="box" id="81"></td>
+            <td class="box" id="82"></td>
+            <td class="box" id="83"></td>
+            <td class="box" id="84"></td>
+            <td class="box" id="85"></td>
+            <td class="box" id="86"></td>
+            <td class="box" id="87"></td>
+            <td class="box" id="88"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="subtitle" id="subtitle">
+        You've got 20 turns to find and hit the two 1x1 ships. Enter your guess
+        below and hit 'Play'
+      </p>
+
+      <div class="form">
+        <label for="x_value">X value:</label>
+        <input type="number" id="xValue" name="xValue" />
+        <label for="y_value">Y value:</label>
+        <input type="number" id="yValue" name="yValue" />
+        <input type="button" value="Play" onclick="makeMove()" />
+      </div>
+    </div>
+  </body>
+</html>
